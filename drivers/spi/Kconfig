@@ -681,6 +681,13 @@ config SPI_DW_MMIO
 #
 comment "SPI Protocol Masters"
 
+config SPI_DEV_USER
+        tristate "100ask spidev support"
+        depends on SPI_ROCKCHIP
+        help
+          This device supports single, Multiple chip selection.
+
+
 config SPI_SPIDEV
 	tristate "User mode SPI device driver support"
 	help

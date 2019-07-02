@@ -12,6 +12,13 @@ config DHT11
 	  Other sensors should work as well as long as they speak the
 	  same protocol.
 
+config DHT11_MOD
+       tristate "100ask  DHT11   module  driver"
+       depends on GPIOLIB || COMPILE_TEST
+       help
+         This driver supports reading data via a single interrupt
+         generating GPIO line.
+
 config HDC100X
 	tristate "TI HDC100x relative humidity and temperature sensor"
 	depends on I2C

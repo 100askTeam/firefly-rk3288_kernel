@@ -95,3 +95,7 @@ obj-$(CONFIG_SPI_XTENSA_XTFPGA)		+= spi-xtensa-xtfpga.o
 obj-$(CONFIG_SPI_ZYNQMP_GQSPI)		+= spi-zynqmp-gqspi.o
 obj-$(CONFIG_SPI_WK2XXX)            += spi-wk2xxx.o
 spi-wk2xxx-objs                     := spi-wk2xxx
+
+#100ask  spidev  lib
+obj-$(CONFIG_SPI_DEV_USER)              += 100ask-spidev.o
+

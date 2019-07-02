@@ -150,6 +150,30 @@ config RC_ATI_REMOTE
 	   To compile this driver as a module, choose M here: the module will be
 	   called ati_remote.
 
+config IRDA_NEC_MOD
+        tristate "100ask irda modules "
+        depends on RC_CORE
+        select BITREVERSE
+        default m
+
+        ---help---
+           Enable this option if you have IR with NEC protocol, and
+           if the IR is decoded in software
+
+
+
+config IRDA_NEC_RC_MOD
+        tristate "100ask irda modules  rc "
+        depends on RC_CORE
+        select BITREVERSE
+        default m
+
+        ---help---
+           Enable this option if you have IR with NEC protocol, and
+           if the IR is decoded in software
+
+
+
 config IR_ENE
 	tristate "ENE eHome Receiver/Transceiver (pnp id: ENE0100/ENE02xxx)"
 	depends on PNP
