@@ -963,7 +963,7 @@ static void uvc_video_stats_stop(struct uvc_streaming *stream)
 static int uvc_video_decode_start(struct uvc_streaming *stream,
 		struct uvc_buffer *buf, const __u8 *data, int len)
 {
-	__u8 fid;
+	static __u8 fid;
 
 	/* Sanity checks:
 	 * - packet must be at least 2 bytes long
@@ -975,7 +975,26 @@ static int uvc_video_decode_start(struct uvc_streaming *stream,
 		return -EINVAL;
 	}
 
-	fid = data[1] & UVC_STREAM_FID;
+	/* ip2970/ip2977 */
+	  if (stream->dev->udev->descriptor.idVendor == 0x1B3B)
+	  {
+		  if ( len >= 16 ) // have data in buffer
+		  {
+			  // 資料必須從data[12]開始判斷，是因為前面的資料是封包專用
+			  if ( (data[12]==0xFF && data[13]==0xD8 && data[14]==0xFF) ||
+				  (data[12]==0xD8 && data[13]==0xFF && data[14]==0xC4)) 
+			  {
+				  if(stream->last_fid)
+					  fid &= ~UVC_STREAM_FID;
+				  else
+					  fid |= UVC_STREAM_FID;
+			  }
+		  }
+	  }
+	  else
+	  {
+		fid = data[1] & UVC_STREAM_FID;
+	  }
 
 	/* Increase the sequence number regardless of any buffer states, so
 	 * that discontinuous sequence numbers always indicate lost frames.
@@ -1093,6 +1112,16 @@ static void uvc_video_copy_data_work(struct work_struct *work)
 static void uvc_video_decode_data(struct uvc_urb *uvc_urb,
 		struct uvc_buffer *buf, const __u8 *data, int len)
 {
+	// 要修改影像資料，必須先宣告一個特別型態的指標變數，才能正確存取記憶體中的資料
+	unsigned char *point_mem;
+	static unsigned char *mem_temp = NULL;
+
+	// 初始化暫存用的記憶體位置
+	static unsigned int nArrayTemp_Size = 1000;
+	 
+	unsigned int  nbytes;
+	void *mem;
+	
 	unsigned int active_op = uvc_urb->async_operations;
 	struct uvc_copy_op *decode = &uvc_urb->copy_operations[active_op];
 	unsigned int maxlen;
@@ -1102,6 +1131,12 @@ static void uvc_video_decode_data(struct uvc_urb *uvc_urb,
 		return;
 
 	maxlen = buf->length - buf->bytesused;
+	
+	mem = buf->mem + buf->bytesused;
+	nbytes = min((unsigned int)len, maxlen);
+	memcpy(mem, data, nbytes);
+	buf->bytesused += nbytes;
+	
 
 	/* Take a buffer reference for async work */
 	kref_get(&buf->ref);
@@ -1113,6 +1148,28 @@ static void uvc_video_decode_data(struct uvc_urb *uvc_urb,
 
 	buf->bytesused += decode->len;
 
+		/* ip2970/ip2977 */
+	 if (uvc_urb->stream->dev->udev->descriptor.idVendor == 0x1B3B)
+	 {
+		 if(mem_temp == NULL) {
+			 mem_temp = kmalloc(nArrayTemp_Size, GFP_KERNEL);
+		 }
+		 else if(nArrayTemp_Size <= nbytes){ // 當收到的資料長度大於上一次的資料長度，則重新分配所需的空間+
+			 kfree(mem_temp);
+			 nArrayTemp_Size += 500;
+			 mem_temp = kmalloc(nArrayTemp_Size, GFP_KERNEL);
+		 }
+		 memset(mem_temp, 0x00, nArrayTemp_Size);
+		 
+		 // 指向資料儲存的記憶體位置
+		 point_mem = (unsigned char *)mem;
+		 if( *(point_mem) == 0xD8 && *(point_mem + 1) == 0xFF && *(point_mem + 2) == 0xC4){
+			 memcpy( mem_temp + 1, point_mem, nbytes);
+			 mem_temp[0] = 0xFF;
+			 memcpy( point_mem, mem_temp, nbytes + 1);
+		 }
+	 }
+	
 	/* Complete the current frame if the buffer size was exceeded. */
 	if (len > maxlen) {
 		uvc_trace(UVC_TRACE_FRAME, "Frame complete (overflow).\n");
