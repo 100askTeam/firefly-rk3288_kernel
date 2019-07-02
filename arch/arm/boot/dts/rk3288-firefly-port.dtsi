@@ -223,10 +223,7 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 		autorepeat;
-
 		pinctrl-names = "default";
-		pinctrl-0 = <&pwrbtn>;
-
 		button@0 {
 			gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
 			linux,code = <KEY_POWER>;
@@ -234,7 +231,36 @@
 			linux,input-type = <1>;
 			gpio-key,wakeup = <1>;
 			debounce-interval = <100>;
+
+			pinctrl-names = "default";
+			pinctrl-0 = <&pwrbtn>;
 		};
+
+		//100ask extend board.
+		button@1 {
+			gpios = <&gpio6 8 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_LEFT>;
+			label = "GPIO LEFT";
+			linux,input-type = <1>;
+			gpio-key,wakeup = <1>;
+			debounce-interval = <100>;
+
+			pinctrl-names = "default";
+			pinctrl-0 = <&leftbtn>;
+		};
+
+		button@2 {
+			gpios = <&gpio7 9 GPIO_ACTIVE_LOW>;
+			linux,code = <KEY_RIGHT>;
+			label = "GPIO RIGHT";
+			linux,input-type = <1>;
+			gpio-key,wakeup = <1>;
+			debounce-interval = <100>;
+
+			pinctrl-names = "default";
+			pinctrl-0 = <&rightbtn>;
+		};	
+		
 	};
 
 	leds {
@@ -248,7 +274,7 @@
 			pinctrl-0 = <&led_power>;
 			default-state = "on";
 		};
-
+#if 0
 		user {
 			label = "firefly:yellow:user";
 			linux,default-trigger = "ir-user-click";
@@ -257,6 +283,7 @@
 			pinctrl-0 = <&led_user>;
 			default-state = "off";
 		};
+#endif
 	};
 
 	wireless-bluetooth {
@@ -484,9 +511,17 @@
 	status = "okay";
 };
 
+&uart1 {
+    status = "okay";
+};  
+
 &uart2 {
 	status = "disabled";
 };
+
+&uart3 {
+    status = "okay";
+}
 
 &vpu_service {
 	status = "okay";
@@ -635,6 +670,14 @@
 		pwrbtn: pwrbtn {
 			rockchip,pins = <0 5 RK_FUNC_GPIO &pcfg_pull_up>;
 		};
+		
+		leftbtn: leftbtn {
+	                rockchip,pins = <6 8 RK_FUNC_GPIO &pcfg_pull_up>;
+	        };
+ 
+	        rightbtn: rightbtn {
+             		rockchip,pins = <7 9 RK_FUNC_GPIO &pcfg_pull_up>;
+	        };
 	};
 
 	leds {
