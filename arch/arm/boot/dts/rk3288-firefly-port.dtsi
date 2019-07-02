@@ -521,7 +521,7 @@
 
 &uart3 {
     status = "okay";
-}
+};
 
 &vpu_service {
 	status = "okay";
