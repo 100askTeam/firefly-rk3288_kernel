@@ -2300,7 +2300,8 @@ static const struct uvc_device_info uvc_quirk_force_y8 = {
  * though they are compliant.
  */
 static struct usb_device_id uvc_ids[] = {
-/*iPassion USB Web Camera */
+	
+	 /*iPassion USB Web Camera */
 	 { .match_flags = USB_DEVICE_ID_MATCH_DEVICE
 					   | USB_DEVICE_ID_MATCH_INT_INFO,
 	 .idVendor = 0x1B3B,
@@ -2308,8 +2309,8 @@ static struct usb_device_id uvc_ids[] = {
 	 .bInterfaceClass = USB_CLASS_VIDEO,
 	 .bInterfaceSubClass = 1,
 	 .bInterfaceProtocol = 0,
-	 .driver_info = UVC_QUIRK_PROBE_MINMAX
-					  | UVC_QUIRK_IGNORE_SELECTOR_UNIT},
+	 .driver_info = UVC_QUIRK_INFO(UVC_QUIRK_PROBE_MINMAX
+					| UVC_QUIRK_IGNORE_SELECTOR_UNIT) },
 
 	 /*iPassion USB Web Camera */
 	 { .match_flags = USB_DEVICE_ID_MATCH_DEVICE
@@ -2319,8 +2320,8 @@ static struct usb_device_id uvc_ids[] = {
 	 .bInterfaceClass = USB_CLASS_VIDEO,
 	 .bInterfaceSubClass = 1,
 	 .bInterfaceProtocol = 0,
-	 .driver_info = UVC_QUIRK_PROBE_MINMAX
-					  | UVC_QUIRK_IGNORE_SELECTOR_UNIT},
+	 .driver_info = UVC_QUIRK_INFO(UVC_QUIRK_PROBE_MINMAX
+					| UVC_QUIRK_IGNORE_SELECTOR_UNIT) },
 				  
 	/* LogiLink Wireless Webcam */
 	{ .match_flags		= USB_DEVICE_ID_MATCH_DEVICE
