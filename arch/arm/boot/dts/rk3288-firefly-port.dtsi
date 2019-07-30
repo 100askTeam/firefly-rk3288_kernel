@@ -671,13 +671,9 @@
 			rockchip,pins = <0 5 RK_FUNC_GPIO &pcfg_pull_up>;
 		};
 		
-		leftbtn: leftbtn {
-	                rockchip,pins = <6 8 RK_FUNC_GPIO &pcfg_pull_up>;
-	        };
- 
-	        rightbtn: rightbtn {
-             		rockchip,pins = <7 9 RK_FUNC_GPIO &pcfg_pull_up>;
-	        };
+		keyabtn: keyabtn {
+	                rockchip,pins = <7 9 RK_FUNC_GPIO &pcfg_pull_up>;
+	     };
 	};
 
 	leds {
