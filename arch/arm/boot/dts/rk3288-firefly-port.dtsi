@@ -238,29 +238,16 @@
 
 		//100ask extend board.
 		button@1 {
-			gpios = <&gpio6 8 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_LEFT>;
-			label = "GPIO LEFT";
-			linux,input-type = <1>;
-			gpio-key,wakeup = <1>;
-			debounce-interval = <100>;
-
-			pinctrl-names = "default";
-			pinctrl-0 = <&leftbtn>;
-		};
-
-		button@2 {
 			gpios = <&gpio7 9 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_RIGHT>;
-			label = "GPIO RIGHT";
+			linux,code = <KEY_A>;
+			label = "GPIO KEY_A";
 			linux,input-type = <1>;
 			gpio-key,wakeup = <1>;
 			debounce-interval = <100>;
 
 			pinctrl-names = "default";
-			pinctrl-0 = <&rightbtn>;
+			pinctrl-0 = <&keyabtn>;
 		};	
-		
 	};
 
 	leds {
